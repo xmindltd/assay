@@ -1,0 +1,14 @@
+name: check
+on: [push, pull_request]
+jobs:
+  generic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 插件内容必须是通用的
+        run: plugins/assay/scripts/check-plugin-is-generic.sh
+      - name: manifest 是合法 JSON
+        run: |
+          for f in .claude-plugin/marketplace.json .agents/plugins/marketplace.json plugins/assay/.claude-plugin/plugin.json plugins/assay/.codex-plugin/plugin.json; do
+            python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f" && echo "ok $f"
+          done

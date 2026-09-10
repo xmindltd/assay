@@ -1,0 +1,16 @@
+{
+  "name": "boards",
+  "owner": { "name": "zhiteng" },
+  "metadata": {
+    "description": "Generic analysis plugin for dashboards that implement the assay profile (org.xmind.assay-profile). Rules only — no addresses, no metric definitions. When a number still looks wrong after the definitions check, it traces the cause in the dashboard's linked code repos and, with the user's go-ahead and repo access, follows up with an issue or PR (an existing one first) instead of stopping at a report."
+  },
+  "plugins": [
+    {
+      "name": "assay",
+      "source": "./plugins/assay",
+      "description": "Analyze product metrics from any assay-profile compatible dashboard MCP server; trace numbers that still look wrong after the definitions check to the linked code repos and, with the user's go-ahead and repo access, follow up with an issue or PR (an existing one first). 数据看板分析，数字不对就溯源跟进。",
+      "version": "0.2.0",
+      "category": "analytics"
+    }
+  ]
+}

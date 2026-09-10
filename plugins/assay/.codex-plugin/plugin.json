@@ -1,0 +1,23 @@
+{
+  "name": "assay",
+  "version": "0.2.0",
+  "description": "Analyze product metrics from any assay-profile compatible dashboard MCP server; trace numbers that still look wrong after the definitions check to the linked code repos and, with the user's go-ahead and repo access, follow up with an issue or PR (an existing one first). 数据看板分析：收入、订单、转化、漏斗、埋点；数字不对就溯源到关联仓并跟进到解决。",
+  "author": { "name": "zhiteng" },
+  "license": "MIT",
+  "keywords": ["analytics", "metrics", "funnel", "tracking", "mcp", "dashboard"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Assay",
+    "shortDescription": "Ask any connected dashboard about its metrics",
+    "longDescription": "Adds the analysis rules for dashboards that implement the assay profile: first pick which connected dashboard the question is about, read its playbook before interpreting numbers, never add numbers across dashboards, treat null as 'no sample' and 401 as 'reauthorize'. When a number still looks wrong after the definitions are checked, it traces the cause in the dashboard's linked client or server repos, looks for an existing issue or PR first, and, with the user's go-ahead and repo access, opens one to follow the fix through instead of stopping at a report. Also includes a connect skill that diagnoses a missing or expired dashboard connection and prints the commands to fix it, and a list skill that shows which dashboards are connected. Contains no addresses or metric definitions — those come from each dashboard's describe_dashboard tool.",
+    "developerName": "zhiteng",
+    "category": "Productivity",
+    "capabilities": ["Interactive"],
+    "defaultPrompt": [
+      "How did revenue and conversion do last week?",
+      "Where does the signup funnel drop off?",
+      "Did the A/B test win?",
+      "How do I connect a dashboard?"
+    ]
+  }
+}
