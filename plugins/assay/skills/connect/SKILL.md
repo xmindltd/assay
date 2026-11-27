@@ -16,19 +16,19 @@ description: >
 
 ## 原则：MCP 配置只做只读诊断，写操作由用户自己跑
 
-连接这一步你可以执行的命令只有 `claude --version`、`codex --version`、`claude mcp list`、`codex mcp list`。
-`mcp add`、`plugin install`、`mcp login` **一律由用户在自己的终端里粘贴执行** —— 理由：
-新加的 server 当前会话看不到，用户随后会以为没成功；Codex 的授权命令会阻塞等浏览器，
-跑在你这里用户看不到那条链接。把要执行的命令原样打印给他，说明「退出会话、在终端里跑、再重开」。
+连接这一步你可以执行的命令只有 `claude --version`、`codex --version`、`agy --version`、`claude mcp list`、`codex mcp list`、`agy mcp list`（以及只读查看 `~/.gemini/config/mcp_config.json` 或 `.agents/mcp_config.json`）。
+`mcp add`、`plugin install`、`mcp login` 以及修改 `mcp_config.json` **一律由用户在自己的终端或配置里执行** —— 理由：
+新加的 server 当前会话看不到，用户随后会以为没成功；授权流程需要浏览器交互，
+跑在你这里用户看不到那条链接。把要执行的命令或配置片段原样打印给他，说明「退出会话、在终端里跑、再重开」（或按客户端指引完成授权）。
 
 ## 1. 分诊
 
-先看工具表里有没有以 `describe_dashboard` 结尾的工具，再问用户是「从没连过」还是「之前能用」。
+先看工具表（以及延迟加载客户端的已连接 MCP 工具列表）里有没有以 `describe_dashboard` 结尾的工具，再问用户是「从没连过」还是「之前能用」。
 
 | 状态 | 处方 |
 | --- | --- |
 | 从没连过 | 走第 2 节 |
-| 之前能用、工具不见了 | 授权过期。看板的工具会**整个消失**而不是报错。连接器路径：回到连接器里重新连一次；命令行路径：`claude mcp list` / `codex mcp list` 看到条目还在但未连接 → 重新授权（Codex 是 `codex mcp login board-<看板id>`），**不要重新注册** |
+| 之前能用、工具不见了 | 授权过期。看板的工具会**整个消失**而不是报错。连接器路径：回到连接器里重新连一次；Antigravity 路径：`agy mcp list` 确认条目还在，到 App 的 **Customizations → Installed → MCP Servers** 点 **Authenticate** 重新授权（或 CLI 里 `/mcp`）；命令行路径：`claude mcp list` / `codex mcp list` 看到条目还在但未连接 → 重新授权（Codex 是 `codex mcp login board-<看板id>`），**不要重新注册** |
 | 换了台电脑 | 完整重做第 2 节。旧机器的授权仍然有效，目前无法自助吊销，会随令牌上限自然过期 |
 
 ## 2. 连接（给用户的步骤，不替他执行）
@@ -36,10 +36,11 @@ description: >
 **不开终端的路径（推荐给产品经理）：** 打开看板网页 → 找「在 AI 里用」或连接说明 → 复制 MCP 地址 →
 Claude 设置 → 连接器 → 添加自定义连接器 → 粘贴 → 用公司邮箱登录 → 授权。
 
-**命令行路径（工程）：**
+**命令行 / 配置路径（工程）：**
 - Claude Code：`claude mcp add --transport http board-<看板id> <MCP 地址>`，然后重开会话，`/mcp` 里完成授权。
 - Codex：先跑版本门（第 3 节），再 `codex mcp add board-<看板id> --url <MCP 地址> --oauth-client-registration dcr`，
   然后 `codex mcp login board-<看板id>`，新开 thread。
+- Antigravity：`agy mcp add --type http board-<看板id> <MCP 地址>`（或在 `~/.gemini/config/mcp_config.json` / 项目级 `.agents/mcp_config.json` 的 `mcpServers` 下添加 `"board-<看板id>": { "serverUrl": "<MCP 地址>" }`），然后在 Antigravity App 的 **Customizations → Installed → MCP Servers** 点 **Authenticate** 完成授权（CLI 里用 `/mcp`），重开会话。
 
 MCP 地址只从看板网页或 `describe_dashboard` 返回的 `connect.mcpUrl` 来，本 skill 不含任何地址。
 
@@ -49,7 +50,7 @@ MCP 地址只从看板网页或 `describe_dashboard` 返回的 `connect.mcpUrl` 
 - 低于 0.149：旧版本的配置格式没有 HTTP 看板这一项。危险不在旧版照抄命令（那会安全失败），
   而在**机器上同时装了新旧两个版本**：新版写进去的看板条目会让 PATH 上的旧版读不了整份配置，
   他所有 MCP 服务一起消失。处方是升级并确保 PATH 指向新版；**不要**教用户用绝对路径绕过旧版本。
-- 装了插件或加了 server 之后都要重开会话（Codex 是新 thread）。Claude Code 没有重载命令，只能退出重开。
+- 装了插件或加了 server 之后通常要重开会话（Codex 是新 thread；Claude Code 没有重载命令，只能退出重开；Antigravity 装完插件下一轮即生效，新加 MCP server 完成授权或重开会话后生效）。
 
 ## 4. 常见坑
 

@@ -9,8 +9,8 @@ report() { echo "✘ $1"; fail=1; }
 
 scan() { grep -rInE "$1" --include='*.md' --include='*.json' --exclude-dir=.git . ; }
 
-# 1. 具体域名 / 地址（本仓库自己的 GitHub 地址、example.com、<占位符> 放行）
-if scan 'https?://[a-zA-Z0-9.-]+' | grep -vE 'example\.com|<[^>]+>|github\.com/[^/ ]+/assay' ; then
+# 1. 具体域名 / 地址（本仓库自己的 GitHub 地址、Antigravity 官方 schema、example.com、<占位符> 放行）
+if scan 'https?://[a-zA-Z0-9.-]+' | grep -vE 'example\.com|<[^>]+>|github\.com/[^/ ]+/assay|antigravity\.google/schemas/' ; then
   report "出现了具体域名或地址"
 fi
 

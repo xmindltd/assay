@@ -21,14 +21,14 @@ description: >
 ## 1. 先认清问的是哪个看板
 
 看你的工具表里有几个名字以 `describe_dashboard` 结尾的工具（连接器路径下前缀是一串随机 ID，
-只看结尾）。**每一个都是一个独立的看板。**
+只看结尾；延迟加载 MCP 工具的客户端里，也在已连接 MCP 服务器的工具列表里找名为 `describe_dashboard` 的工具）。**每一个都是一个独立的看板。**
 
 - **一个都没有** → 不要猜数字。先分诊，两种情况处方完全不同：
   - 从没连过 → 告诉用户：打开看板网页，找「在 AI 里用」/ 连接说明，按上面的步骤把看板加进
-    Claude 的连接器（或让工程用 `claude mcp add` / `codex mcp add`）。
+    客户端的连接器或 MCP 配置（或让工程用 `claude mcp add` / `codex mcp add` / `agy mcp add`）。
   - 之前能用、现在工具不见了 → 多半是授权过期，看板的工具会**整个消失**而不是报错。
-    处方是回到连接器里重新授权一次，这是例行操作，不是故障。
-    能跑命令的话用只读的 `claude mcp list` / `codex mcp list` 确认条目还在、状态是未连接。
+    处方是回到连接器或 MCP 管理界面（如 Antigravity 的 **Customizations → Installed → MCP Servers** 或 `/mcp`）重新授权一次，这是例行操作，不是故障。
+    能跑命令的话用只读的 `claude mcp list` / `codex mcp list` / `agy mcp list` 确认条目还在、状态是未连接。
 - **恰好一个** → 用它。
 - **多于一个** → 各调一次 `describe_dashboard`，用 `board.displayName` 列出来，**先问用户要看哪个**。
   用户没点名之前不要取数。

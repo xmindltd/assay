@@ -7,7 +7,7 @@
 
 ## 使用方式
 
-1. 安装此插件，参考后续的「Claude 桌面端」、「Claude Code」或「Codex」章节
+1. 安装此插件，参考后续的「Claude 桌面端」、「Claude Code」、「Codex」或「Antigravity」章节
 2. 添加 dashboard 服务器的 MCP/自定义连接器并且完成鉴权
 
 然后就可以直接正常使用或者通过指令强制触发了
@@ -34,6 +34,18 @@ codex plugin add assay@boards
 ```
 
 装完开一个新 thread。
+
+### Antigravity
+
+使用 Antigravity CLI（`agy`）直接从 GitHub 安装（CLI 安装的插件会自动同步到 Antigravity App）：
+
+```bash
+agy plugin install https://github.com/xmindltd/assay
+```
+
+如果已经克隆了本仓库，也可以从本地目录安装：`agy plugin install ./plugins/assay`。装完在 CLI 里运行 `/skills reload` 或开一个新会话；在 Antigravity App 的 **Customizations → Installed** 里可以看到 `Assay`。
+
+不用 CLI 时，也可以手动把 `plugins/assay` 放进 `~/.gemini/config/plugins/assay`（全局生效）或项目根的 `.agents/plugins/assay`（仅当前项目生效）。
 
 ## 给要实现一个新看板的人
 
